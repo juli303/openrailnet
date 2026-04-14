@@ -2,7 +2,20 @@
   "name": "OpenRailNet Protocol",
   "version": "0.1.0",
   "description": "Portable reference implementation of the OpenRailNet protocol",
-  "keywords": ["rail", "train", "protocol", "rs485", "embedded"],
+  "keywords": [
+    "openrailnet",
+    "orn",
+    "rail",
+    "train",
+    "protocol",
+    "rs485",
+    "embedded"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/juli303/openrailnet.git"
+  },
+  "license": "MIT",
   "build": {
     "includeDir": "include",
     "srcDir": "src"
