@@ -66,10 +66,13 @@ Each node has:
 
 Each node must provide:
 
-- unique `vehicle_id`
+- unique 16-bit node identifier carried in `SRC` / `DST`
 - `vehicle_type`
 - `front_side` (A or B)
 - link interfaces (Port A and Port B)
+
+Discovery records and consist tables refer to the same identifier as
+`vehicle_id`.
 
 Each node is responsible for:
 - forwarding packets
@@ -172,13 +175,20 @@ Special values:
 
 Used for neighbor detection.
 
-Payload:
+Payload fields:
 
-- vehicle_id
-- vehicle_type
-- front_side
-- capabilities
-- protocol version
+| Field | Size | Notes |
+|------|------|------|
+| `vehicle_type` | 1 | `orn_vehicle_type_t` |
+| `front_side` | 1 | `orn_front_side_t` |
+| `proto_version` | 1 | Usually `ORN_PROTO_VERSION_V0_1` |
+| `hello_seq` | 1 | HELLO-local sequence for link management |
+| `capabilities` | 2 | Capability bitfield |
+
+Notes:
+
+- sender identity is carried in `HEADER.SRC`
+- HELLO does not duplicate `vehicle_id` in the payload
 
 ---
 
@@ -186,16 +196,31 @@ Payload:
 
 Response to HELLO.
 
-Payload:
+Payload fields:
 
-- acknowledged sequence
-- optional status flags
+| Field | Size | Notes |
+|------|------|------|
+| `acked_hello_seq` | 1 | HELLO sequence being acknowledged |
+| `status_flags` | 1 | Optional link / status flags |
+
+`HELLO_ACK` is only for neighbor management. It is distinct from the
+generic reliability packets `ACK` and `NACK`.
 
 ---
 
 ### 6.3 DISCOVER_TRIGGER
 
 Initiates discovery.
+
+Payload fields:
+
+| Field | Size | Notes |
+|------|------|------|
+| `session_id` | 2 | Unique discovery session identifier |
+| `trigger_direction` | 1 | `orn_port_t` from original sender perspective |
+| `reserved` | 1 | Reserved, transmit as zero |
+
+Behavior:
 
 - sent in one direction only
 - used to locate a train end
@@ -206,15 +231,28 @@ Initiates discovery.
 
 Authoritative discovery packet.
 
-- initiated only by end node
-- accumulates node records
+Base payload fields:
 
-Each node appends:
+| Field | Size | Notes |
+|------|------|------|
+| `session_id` | 2 | Current discovery session |
+| `record_count` | 1 | Number of appended records |
+| `reserved` | 1 | Reserved, transmit as zero |
 
-- vehicle_id
-- vehicle_type
-- front_side
-- capabilities
+Discovery records appended after the base payload:
+
+| Field | Size | Notes |
+|------|------|------|
+| `vehicle_id` | 2 | Same logical identifier as `HEADER.SRC` |
+| `vehicle_type` | 1 | `orn_vehicle_type_t` |
+| `front_side` | 1 | `orn_front_side_t` |
+| `capabilities` | 2 | Capability bitfield |
+
+Behavior:
+
+- initiated only by an end node
+- each participating node appends exactly one discovery record
+- `record_count` must match the number of appended records
 
 ---
 
@@ -222,11 +260,26 @@ Each node appends:
 
 Final topology result.
 
-Contains:
+Base payload fields:
 
-- ordered list of nodes
-- position per node
-- orientation per node
+| Field | Size | Notes |
+|------|------|------|
+| `session_id` | 2 | Discovery session being published |
+| `entry_count` | 1 | Number of appended consist entries |
+| `reserved` | 1 | Reserved, transmit as zero |
+
+Consist entries appended after the base payload:
+
+| Field | Size | Notes |
+|------|------|------|
+| `vehicle_id` | 2 | Same logical identifier as `HEADER.SRC` |
+| `position` | 1 | `0..N-1` in consist order |
+| `orientation` | 1 | `orn_orientation_t` |
+
+Behavior:
+
+- contains the ordered list of nodes
+- `entry_count` must match the number of appended entries
 
 ---
 
@@ -234,18 +287,29 @@ Contains:
 
 Control packet.
 
-Payload:
+Payload fields:
 
-- direction (forward / reverse / hold)
-- speed command
-- brake command
-- flags
+| Field | Size | Notes |
+|------|------|------|
+| `direction` | 1 | `orn_direction_t` in consist coordinates |
+| `speed_cmd` | 1 | `0..255` |
+| `brake_cmd` | 1 | `0..255` |
+| `flags` | 1 | Implementation-defined command flags |
 
 ---
 
 ### 6.7 EMERGENCY_STOP
 
 Immediate stop command.
+
+Payload fields:
+
+| Field | Size | Notes |
+|------|------|------|
+| `reason_code` | 1 | Stop reason |
+| `source_class` | 1 | Origin class |
+
+Behavior:
 
 - broadcast
 - highest priority
@@ -256,11 +320,25 @@ Immediate stop command.
 
 Provides runtime information.
 
-Examples:
-- battery level
-- temperature
-- fault flags
-- current speed
+`VEHICLE_STATUS` payload fields:
+
+| Field | Size | Notes |
+|------|------|------|
+| `state_flags` | 1 | Generic status bits |
+| `battery_percent` | 1 | `0..100` recommended |
+| `temperature_c` | 1 | Signed Celsius |
+| `reserved0` | 1 | Reserved, transmit as zero |
+| `error_flags` | 2 | Generic error bitfield |
+
+`LOCO_STATUS` payload fields:
+
+| Field | Size | Notes |
+|------|------|------|
+| `actual_direction` | 1 | Local physical direction, not consist-relative |
+| `actual_speed` | 1 | Current speed |
+| `traction_percent` | 1 | `0..100` recommended |
+| `brake_percent` | 1 | `0..100` recommended |
+| `error_flags` | 2 | Loco error bitfield |
 
 ---
 
@@ -268,11 +346,25 @@ Examples:
 
 Used for reliable communication.
 
-Payload:
+Packet types:
 
-- acknowledged type
-- acknowledged sequence
-- status code
+- `ACK` uses packet type `ORN_PKT_ACK`
+- `NACK` uses packet type `ORN_PKT_NACK`
+
+Shared payload fields:
+
+| Field | Size | Notes |
+|------|------|------|
+| `acked_type` | 1 | Original packet type being acknowledged |
+| `acked_seq` | 1 | Original packet sequence number |
+| `code` | 1 | `0` for ACK, nonzero error/status for NACK |
+| `reserved` | 1 | Reserved, transmit as zero |
+
+ACK flag semantics:
+
+- `VERFLG.bit0` (`ACK requested`) may be set on non-ACK/NACK packets that require a reliability response
+- `VERFLG.bit1` (`ACK packet`) is set on both `ACK` and `NACK` frames
+- `ACK` and `NACK` do not request acknowledgments of their own
 
 ---
 
@@ -377,10 +469,13 @@ Duplicate packets:
 
 ### 10.1 ACK Behavior
 
-Packets may request ACK.
+Packets may request acknowledgment by setting `VERFLG.bit0`.
 
-- sender retransmits if no ACK
-- retries use same SEQ
+- the receiver responds with `ACK` or `NACK` addressed back to the original sender
+- the response references the original packet using `acked_type` and `acked_seq`
+- sender retransmits the original packet if no response is received
+- retransmissions reuse the same `SEQ`
+- duplicate packets must not be executed twice, but they should still be answered if acknowledgment was requested
 
 ---
 

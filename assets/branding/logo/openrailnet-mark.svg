@@ -1,0 +1,21 @@
+<svg width="180" height="140" viewBox="0 0 180 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="180" height="140" fill="white"/>
+
+  <!-- Rails -->
+  <line x1="18" y1="38" x2="150" y2="38" stroke="#111111" stroke-width="8" stroke-linecap="round"/>
+  <line x1="18" y1="82" x2="150" y2="82" stroke="#111111" stroke-width="8" stroke-linecap="round"/>
+
+  <!-- Ties -->
+  <line x1="36" y1="32" x2="36" y2="88" stroke="#111111" stroke-width="6" stroke-linecap="round"/>
+  <line x1="76" y1="32" x2="76" y2="88" stroke="#111111" stroke-width="6" stroke-linecap="round"/>
+  <line x1="116" y1="32" x2="116" y2="88" stroke="#111111" stroke-width="6" stroke-linecap="round"/>
+
+  <!-- Network line -->
+  <polyline points="18,104 62,104 94,18 150,18" stroke="#111111" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- Nodes -->
+  <circle cx="18" cy="104" r="10" fill="#111111"/>
+  <circle cx="62" cy="104" r="10" fill="#111111"/>
+  <circle cx="94" cy="18" r="10" fill="#111111"/>
+  <circle cx="150" cy="18" r="10" fill="#111111"/>
+</svg>

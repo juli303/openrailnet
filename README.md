@@ -1,3 +1,6 @@
+<p align="center">
+  <img src="assets/branding/logo/openrailnet-logo.svg" alt="OpenRailNet logo" width="420">
+</p>
 # OpenRailNet (ORN)
 
 OpenRailNet (ORN) is an open protocol and system architecture for communication between modular rail vehicles.

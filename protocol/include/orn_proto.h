@@ -33,6 +33,12 @@
 /* ============================================================
  * Version + Flags
  * VERFLG: upper nibble = version, lower nibble = flags
+ *
+ * ACK semantics:
+ * - ORN_FLAG_ACK_REQUESTED asks for a reliability response to this frame.
+ * - ORN_FLAG_IS_ACK marks ORN_PKT_ACK and ORN_PKT_NACK frames.
+ * - ACK/NACK packets reuse orn_payload_ack_t; ACK uses code=0, NACK uses
+ *   a nonzero code.
  * ============================================================ */
 
 #define ORN_VERFLG_MAKE(version, flags) \
@@ -135,7 +141,7 @@ typedef struct ORN_PACKED
     uint8_t  verflg;    /* version + flags */
     uint8_t  type;      /* orn_packet_type_t */
     uint8_t  priority;  /* orn_priority_t */
-    uint16_t src;       /* source node ID */
+    uint16_t src;       /* source node ID; same logical ID used as vehicle_id */
     uint16_t dst;       /* destination node ID or ORN_NODE_ID_BROADCAST */
     uint8_t  seq;       /* sender sequence number */
     uint8_t  len;       /* payload length in bytes */
@@ -168,8 +174,8 @@ typedef uint16_t orn_error_flags_t;
  * HELLO
  *
  * Used for neighbor detection and liveness.
- * The node ID is already in header.src, but including node metadata
- * here makes HELLO self-describing.
+ * The sender identity is carried in header.src. HELLO payload carries
+ * self-description plus a HELLO-local sequence number for link tracking.
  * ============================================================ */
 
 typedef struct ORN_PACKED
@@ -183,6 +189,9 @@ typedef struct ORN_PACKED
 
 /* ============================================================
  * HELLO_ACK
+ *
+ * Link-management response to HELLO. This is distinct from ORN_PKT_ACK,
+ * which is the generic reliability acknowledgment used with ACK_REQUESTED.
  * ============================================================ */
 
 typedef struct ORN_PACKED
@@ -298,6 +307,9 @@ typedef struct ORN_PACKED
 
 /* ============================================================
  * ACK / NACK
+ *
+ * Shared payload for ORN_PKT_ACK and ORN_PKT_NACK. These frames should
+ * carry ORN_FLAG_IS_ACK in header.verflg.
  * ============================================================ */
 
 typedef struct ORN_PACKED

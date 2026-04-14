@@ -1,0 +1,42 @@
+<svg width="720" height="180" viewBox="0 0 720 180" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="720" height="180" fill="white"/>
+  
+  <!-- Icon -->
+  <g transform="translate(36,30)">
+    <!-- Rails -->
+    <line x1="18" y1="38" x2="150" y2="38" stroke="#111111" stroke-width="8" stroke-linecap="round"/>
+    <line x1="18" y1="82" x2="150" y2="82" stroke="#111111" stroke-width="8" stroke-linecap="round"/>
+
+    <!-- Ties / structure -->
+    <line x1="36" y1="32" x2="36" y2="88" stroke="#111111" stroke-width="6" stroke-linecap="round"/>
+    <line x1="76" y1="32" x2="76" y2="88" stroke="#111111" stroke-width="6" stroke-linecap="round"/>
+    <line x1="116" y1="32" x2="116" y2="88" stroke="#111111" stroke-width="6" stroke-linecap="round"/>
+
+    <!-- Network line -->
+    <polyline points="18,104 62,104 94,18 150,18" stroke="#111111" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+
+    <!-- Nodes -->
+    <circle cx="18" cy="104" r="10" fill="#111111"/>
+    <circle cx="62" cy="104" r="10" fill="#111111"/>
+    <circle cx="94" cy="18" r="10" fill="#111111"/>
+    <circle cx="150" cy="18" r="10" fill="#111111"/>
+  </g>
+
+  <!-- Wordmark -->
+  <g transform="translate(220,56)">
+    <text x="0" y="38"
+          font-family="Arial, Helvetica, sans-serif"
+          font-size="42"
+          font-weight="700"
+          fill="#111111">
+      OpenRailNet
+    </text>
+    <text x="2" y="78"
+          font-family="Arial, Helvetica, sans-serif"
+          font-size="18"
+          font-weight="400"
+          fill="#444444">
+      Open protocol and architecture for modular rail vehicle communication
+    </text>
+  </g>
+</svg>
