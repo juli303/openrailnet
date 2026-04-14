@@ -20,6 +20,26 @@ OpenRailNet is not just a protocol. It is a complete **open ecosystem** consisti
 
 ---
 
+## 🚧 Status Overview
+
+OpenRailNet is currently in an **early-stage design and prototyping phase**.
+
+Current snapshot:
+
+- Protocol documentation exists and the packet/header definitions are being aligned
+- The portable protocol layer currently defines the wire format in headers, but is not yet a complete implementation library
+- Firmware bring-up has started with an RP2040 PlatformIO target, but it is still a board/prototype stub rather than a full network node
+- Hardware architecture is documented, but reference hardware implementations are still planned
+
+What that means in practice:
+
+- the architecture direction is defined
+- the protocol is still evolving
+- breaking changes are expected
+- the first real milestone is a working multi-node prototype
+
+---
+
 ## 🧠 What this project is
 
 OpenRailNet defines **how rail vehicles communicate with each other**.
@@ -86,18 +106,6 @@ This repository includes:
     ├─ firmware/      → Platform-specific implementations (PlatformIO)
     ├─ tools/         → Debugging and simulation tools
     ├─ examples/      → Minimal examples and walkthroughs
-
----
-
-## 🚧 Status
-
-OpenRailNet is currently in an **early-stage design and prototyping phase**.
-
-- Protocol: evolving and not yet stable
-- Hardware: architecture defined, implementations planned
-- Firmware: initial implementations in progress
-
-Breaking changes are expected as the design is refined.
 
 ---
 
