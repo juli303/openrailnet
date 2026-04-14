@@ -75,11 +75,79 @@ This repository includes:
 
 ## 🏗️ Project Structure
 
-```text
-openrailnet/
-├─ docs/          → Human-readable specification
-├─ protocol/      → Portable reference implementation (C)
-├─ hardware/      → Hardware architecture + implementations
-├─ firmware/      → Platform-specific implementations (PlatformIO)
-├─ tools/         → Debugging and simulation tools
-├─ examples/      → Minimal examples and walkthroughs
+    openrailnet/
+    ├─ docs/          → Human-readable specification
+    ├─ protocol/      → Portable reference implementation (C)
+    ├─ hardware/      → Hardware architecture + implementations
+    ├─ firmware/      → Platform-specific implementations (PlatformIO)
+    ├─ tools/         → Debugging and simulation tools
+    ├─ examples/      → Minimal examples and walkthroughs
+
+---
+
+## 🚧 Status
+
+OpenRailNet is currently in an **early-stage design and prototyping phase**.
+
+- Protocol: evolving and not yet stable
+- Hardware: architecture defined, implementations planned
+- Firmware: initial implementations in progress
+
+Breaking changes are expected as the design is refined.
+
+---
+
+## 🤝 Philosophy
+
+OpenRailNet is designed to follow a small set of strong principles:
+
+### Open
+No proprietary dependencies. The protocol and architecture are fully transparent.
+
+### Simple
+Must be implementable on low-cost microcontrollers without complex infrastructure.
+
+### Deterministic
+System behavior should always be predictable and debuggable.
+
+### Transparent
+All communication is explicit and inspectable — no hidden state or implicit behavior.
+
+### Modular
+Each vehicle is an independent node that can be combined into arbitrary train configurations.
+
+### Extensible
+New features and capabilities can be added without breaking existing systems.
+
+---
+
+## 📚 Documentation
+
+Start here:
+
+- docs/protocol/overview.md → Protocol fundamentals
+- docs/architecture/system-overview.md → System structure and topology
+- docs/hardware/overview.md → Hardware architecture and node layout
+
+The documentation is structured to be readable by both:
+- humans (engineers, builders)
+- machines (LLMs, tooling)
+
+---
+
+## 🔧 Future Work
+
+Planned next steps:
+
+- Complete formal protocol specification
+- Stabilize packet definitions and discovery flow
+- Build first multi-node working prototype
+- Develop reference hardware designs
+- Implement simulation and debugging tools
+- Define compatibility/versioning strategy
+
+---
+
+## 📄 License
+
+TBD (likely MIT or Apache-2.0)
