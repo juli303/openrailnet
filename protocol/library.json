@@ -1,0 +1,10 @@
+{
+  "name": "OpenRailNet Protocol",
+  "version": "0.1.0",
+  "description": "Portable reference implementation of the OpenRailNet protocol",
+  "keywords": ["rail", "train", "protocol", "rs485", "embedded"],
+  "build": {
+    "includeDir": "include",
+    "srcDir": "src"
+  }
+}
